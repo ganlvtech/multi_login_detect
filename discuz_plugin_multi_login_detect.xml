@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+    <item id="Title"><![CDATA[Discuz! Plugin]]></item>
+    <item id="Version"><![CDATA[X3.4]]></item>
+    <item id="Time"><![CDATA[2018-07-05 01:54]]></item>
+    <item id="From"><![CDATA[Discuz! Board (http://discuzx.localhost/)]]></item>
+    <item id="Data">
+        <item id="plugin">
+            <item id="available"><![CDATA[1]]></item>
+            <item id="adminid"><![CDATA[1]]></item>
+            <item id="name"><![CDATA[重复登录检测]]></item>
+            <item id="identifier"><![CDATA[multi_login_detect]]></item>
+            <item id="description"><![CDATA[可以禁止用户多次登录，后登录的人会将先登录的人挤下线，并且双方都有提示。]]></item>
+            <item id="datatables"><![CDATA[]]></item>
+            <item id="directory"><![CDATA[multi_login_detect/]]></item>
+            <item id="copyright"><![CDATA[Ganlv]]></item>
+            <item id="version"><![CDATA[1.0]]></item>
+            <item id="__modules">
+                <item id="0">
+                    <item id="name"><![CDATA[multi_login_detect]]></item>
+                    <item id="menu"><![CDATA[]]></item>
+                    <item id="url"><![CDATA[]]></item>
+                    <item id="type"><![CDATA[11]]></item>
+                    <item id="adminid"><![CDATA[0]]></item>
+                    <item id="displayorder"><![CDATA[0]]></item>
+                    <item id="navtitle"><![CDATA[]]></item>
+                    <item id="navicon"><![CDATA[]]></item>
+                    <item id="navsubname"><![CDATA[]]></item>
+                    <item id="navsuburl"><![CDATA[]]></item>
+                </item>
+                <item id="1">
+                    <item id="name"><![CDATA[multi_login_detect]]></item>
+                    <item id="param"><![CDATA[]]></item>
+                    <item id="menu"><![CDATA[]]></item>
+                    <item id="url"><![CDATA[]]></item>
+                    <item id="type"><![CDATA[28]]></item>
+                    <item id="adminid"><![CDATA[0]]></item>
+                    <item id="displayorder"><![CDATA[1]]></item>
+                    <item id="navtitle"><![CDATA[]]></item>
+                    <item id="navicon"><![CDATA[]]></item>
+                    <item id="navsubname"><![CDATA[]]></item>
+                    <item id="navsuburl"><![CDATA[]]></item>
+                </item>
+            </item>
+        </item>
+        <item id="version"><![CDATA[X3.4]]></item>
+        <item id="var">
+            <item id="0">
+                <item id="displayorder"><![CDATA[0]]></item>
+                <item id="title"><![CDATA[不受控用户组]]></item>
+                <item id="description"><![CDATA[]]></item>
+                <item id="variable"><![CDATA[group_id_white_list]]></item>
+                <item id="type"><![CDATA[groups]]></item>
+                <item id="value"><![CDATA[]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="1">
+                <item id="displayorder"><![CDATA[1]]></item>
+                <item id="title"><![CDATA[下线提示信息]]></item>
+                <item id="description"><![CDATA[用户刷新页面时会退出登录并提示这条信息]]></item>
+                <item id="variable"><![CDATA[message]]></item>
+                <item id="type"><![CDATA[text]]></item>
+                <item id="value"><![CDATA[您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="2">
+                <item id="displayorder"><![CDATA[2]]></item>
+                <item id="title"><![CDATA[是否禁止用户]]></item>
+                <item id="description"><![CDATA[]]></item>
+                <item id="variable"><![CDATA[need_ban]]></item>
+                <item id="type"><![CDATA[radio]]></item>
+                <item id="value"><![CDATA[0]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="3">
+                <item id="displayorder"><![CDATA[3]]></item>
+                <item id="title"><![CDATA[禁止类型]]></item>
+                <item id="description"><![CDATA[禁止发言：不能浏览或发布帖子；禁止访问：不能访问本网站；锁定用户：该用户将无法访问及进行任何操作，包括其它用户也无法访问该用户的相关信息（禁止发言和禁止访问是用户组，锁定用户是用户的一个状态参数，禁止原理不太相同）]]></item>
+                <item id="variable"><![CDATA[ban_type]]></item>
+                <item id="type"><![CDATA[select]]></item>
+                <item id="value"><![CDATA[post]]></item>
+                <item id="extra"><![CDATA[post=禁止发言
+visit=禁止访问
+status=锁定用户]]></item>
+            </item>
+            <item id="4">
+                <item id="displayorder"><![CDATA[4]]></item>
+                <item id="title"><![CDATA[禁止时长]]></item>
+                <item id="description"><![CDATA[单位是天，支持小数]]></item>
+                <item id="variable"><![CDATA[ban_time]]></item>
+                <item id="type"><![CDATA[radio]]></item>
+                <item id="value"><![CDATA[1]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="5">
+                <item id="displayorder"><![CDATA[5]]></item>
+                <item id="title"><![CDATA[禁止原因]]></item>
+                <item id="description"><![CDATA[管理员将在后台管理 工具 > 运行记录 > 违规记录 中看到这条记录，用户会在消息中心看到这条消息]]></item>
+                <item id="variable"><![CDATA[ban_reason]]></item>
+                <item id="type"><![CDATA[text]]></item>
+                <item id="value"><![CDATA[您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+        </item>
+        <item id="installfile"><![CDATA[install.php]]></item>
+        <item id="uninstallfile"><![CDATA[uninstall.php]]></item>
+    </item>
+</root>
