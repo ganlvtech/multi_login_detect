@@ -41,6 +41,30 @@
                     <item id="navsubname"><![CDATA[]]></item>
                     <item id="navsuburl"><![CDATA[]]></item>
                 </item>
+                <item id="2">
+                    <item id="name"><![CDATA[admin_session]]></item>
+                    <item id="menu"><![CDATA[当前登录用户]]></item>
+                    <item id="url"><![CDATA[]]></item>
+                    <item id="type"><![CDATA[3]]></item>
+                    <item id="adminid"><![CDATA[0]]></item>
+                    <item id="displayorder"><![CDATA[0]]></item>
+                    <item id="navtitle"><![CDATA[]]></item>
+                    <item id="navicon"><![CDATA[]]></item>
+                    <item id="navsubname"><![CDATA[]]></item>
+                    <item id="navsuburl"><![CDATA[]]></item>
+                </item>
+                <item id="3">
+                    <item id="name"><![CDATA[admin_log]]></item>
+                    <item id="menu"><![CDATA[重复登录日志]]></item>
+                    <item id="url"><![CDATA[]]></item>
+                    <item id="type"><![CDATA[3]]></item>
+                    <item id="adminid"><![CDATA[0]]></item>
+                    <item id="displayorder"><![CDATA[0]]></item>
+                    <item id="navtitle"><![CDATA[]]></item>
+                    <item id="navicon"><![CDATA[]]></item>
+                    <item id="navsubname"><![CDATA[]]></item>
+                    <item id="navsuburl"><![CDATA[]]></item>
+                </item>
             </item>
         </item>
         <item id="version"><![CDATA[X3.4]]></item>
@@ -65,15 +89,33 @@
             </item>
             <item id="2">
                 <item id="displayorder"><![CDATA[2]]></item>
-                <item id="title"><![CDATA[是否禁止用户]]></item>
-                <item id="description"><![CDATA[]]></item>
-                <item id="variable"><![CDATA[need_ban]]></item>
+                <item id="title"><![CDATA[允许相同IP段重复登录]]></item>
+                <item id="description"><![CDATA[例如 127.0.0.1 与 127.0.0.254 同时登录，不会互相挤掉]]></item>
+                <item id="variable"><![CDATA[allow_same_ip_range]]></item>
                 <item id="type"><![CDATA[radio]]></item>
                 <item id="value"><![CDATA[0]]></item>
                 <item id="extra"><![CDATA[]]></item>
             </item>
             <item id="3">
                 <item id="displayorder"><![CDATA[3]]></item>
+                <item id="title"><![CDATA[IP匹配位数]]></item>
+                <item id="description"><![CDATA[即 CIDR，例如填写 24，就是前 24 位相同不会互相挤掉，最后 8 位可变，比如 127.0.0.0~127.0.0.255 互相不排斥]]></item>
+                <item id="variable"><![CDATA[ip_cidr]]></item>
+                <item id="type"><![CDATA[text]]></item>
+                <item id="value"><![CDATA[24]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="4">
+                <item id="displayorder"><![CDATA[4]]></item>
+                <item id="title"><![CDATA[是否禁止用户]]></item>
+                <item id="description"><![CDATA[当发现重复登录时，暂时或永久封禁用户]]></item>
+                <item id="variable"><![CDATA[need_ban]]></item>
+                <item id="type"><![CDATA[radio]]></item>
+                <item id="value"><![CDATA[0]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="5">
+                <item id="displayorder"><![CDATA[5]]></item>
                 <item id="title"><![CDATA[禁止类型]]></item>
                 <item id="description"><![CDATA[禁止发言：不能浏览或发布帖子；禁止访问：不能访问本网站；锁定用户：该用户将无法访问及进行任何操作，包括其它用户也无法访问该用户的相关信息（禁止发言和禁止访问是用户组，锁定用户是用户的一个状态参数，禁止原理不太相同）]]></item>
                 <item id="variable"><![CDATA[ban_type]]></item>
@@ -83,8 +125,8 @@
 visit=禁止访问
 status=锁定用户]]></item>
             </item>
-            <item id="4">
-                <item id="displayorder"><![CDATA[4]]></item>
+            <item id="6">
+                <item id="displayorder"><![CDATA[6]]></item>
                 <item id="title"><![CDATA[禁止时长]]></item>
                 <item id="description"><![CDATA[单位是天，支持小数]]></item>
                 <item id="variable"><![CDATA[ban_time]]></item>
@@ -92,8 +134,8 @@ status=锁定用户]]></item>
                 <item id="value"><![CDATA[1]]></item>
                 <item id="extra"><![CDATA[]]></item>
             </item>
-            <item id="5">
-                <item id="displayorder"><![CDATA[5]]></item>
+            <item id="7">
+                <item id="displayorder"><![CDATA[7]]></item>
                 <item id="title"><![CDATA[禁止原因]]></item>
                 <item id="description"><![CDATA[管理员将在后台管理 工具 > 运行记录 > 违规记录 中看到这条记录，用户会在消息中心看到这条消息]]></item>
                 <item id="variable"><![CDATA[ban_reason]]></item>

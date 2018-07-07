@@ -17,6 +17,8 @@ class plugin_multi_login_detect
         $config = [
             'group_id_white_list' => [],
             'message' => '您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！',
+            'allow_same_ip_range' => true,
+            'ip_cidr' => 24,
             'need_ban' => false,
             'ban_type' => 'post',
             'ban_time' => 86400,
@@ -42,7 +44,7 @@ class plugin_multi_login_detect
         $table_multi_login_session = DB::table('multi_login_session');
         $auth = daddslashes($_G['cookie']['auth']);
         $ua = substr($_SERVER['HTTP_USER_AGENT'], 0, 1024);
-        $original_session = DB::fetch_first("SELECT `id` FROM `$table_multi_login_session` WHERE `uid` = '$uid' AND `auth` = '$auth' LIMIT 1");
+        $original_session = DB::fetch_first("SELECT `id`, `login_time` FROM `$table_multi_login_session` WHERE `uid` = '$uid' AND `auth` = '$auth' LIMIT 1");
         if (!$original_session) {
             DB::insert('multi_login_session', [
                 'uid' => $uid,
@@ -68,6 +70,13 @@ class plugin_multi_login_detect
             return '';
         }
 
+        // 如果在同一IP地址段，则直接返回
+        if ($config['allow_same_ip_range']) {
+            if (self::cidr_match($_G['clientip'], $original_session['ip' . '/' . $config['ip_cidr']])) {
+                return '';
+            }
+        }
+
         // 记录异常登录状态
         DB::insert('multi_login_log', [
             'uid' => $uid,
@@ -84,7 +93,7 @@ class plugin_multi_login_detect
             'auth2' => $_G['cookie']['auth'],
             'saltkey2' => $_G['cookie']['saltkey'],
             'ua2' => $ua,
-            'login_time2' => TIMESTAMP,
+            'login_time2' => $original_session['login_time'],
             'last_online_time2' => TIMESTAMP,
         ]);
 
@@ -93,7 +102,7 @@ class plugin_multi_login_detect
 
         // 如果异常登录封号
         if ($config['need_ban']) {
-            self::banUser($uid, $config['ban_type'], $config['ban_time'], $config['ban_reason']);
+            self::banUser($uid, $config['ban_type'], (int)$config['ban_time'], $config['ban_reason']);
         }
 
         // 退出登录
@@ -271,6 +280,33 @@ class plugin_multi_login_detect
         notification_add($member['uid'], 'system', $noticekey, $notearr, 1);
 
         return true;
+    }
+
+    /**
+     * IP掩码检查
+     *
+     * @link https://stackoverflow.com/questions/594112/matching-an-ip-to-a-cidr-mask-in-php-5/594134#594134
+     *
+     * @param string $ip IP
+     * @param string|array $range IP掩码
+     *
+     * @return bool
+     */
+    public static function cidr_match($ip, $range)
+    {
+        if (is_array($range)) {
+            foreach ($range as $range1) {
+                if (self::cidr_match($ip, $range1)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        list($subnet, $bits) = explode('/', $range);
+        $ip = ip2long($ip);
+        $subnet = ip2long($subnet);
+        $mask = -1 << (32 - $bits);
+        return ($ip & $mask) === ($subnet & $mask);
     }
 }
 
