@@ -45,24 +45,32 @@ showtableheader('重复登录日志');
 showsubtitle($fields);
 
 while ($row = DB::fetch($query)) {
-    showtablerow('', [], [
-            $row['id'],
-            $row['uid'],
-            $row['username'],
-            long2ip($row['ip1']),
-            substr($row['auth1'], 0, 7) . '...',
-            // $row['saltkey1'],
-            $row['ua1'],
-            date('Y-m-d H:i:s', $row['login_time1']),
-            date('Y-m-d H:i:s', $row['last_online_time1']),
-            long2ip($row['ip2']),
-            substr($row['auth2'], 0, 7) . '...',
-            // $row['saltkey2'],
-            ($row['ua1'] === $row['ua2']) ? 'UA相同' : $row['ua2'],
-            date('Y-m-d H:i:s', $row['login_time2']),
-            date('Y-m-d H:i:s', $row['last_online_time2']),
-        ]
-    );
+    showtablerow('', [
+        '', '', '',
+        'title="' . dhtmlspecialchars(convertip($row['ip1'])) . '"',
+        'title="' . dhtmlspecialchars($row['auth1']) . '"',
+        '', '', '',
+        'title="' . dhtmlspecialchars(convertip($row['ip2'])) . '"',
+        'title="' . dhtmlspecialchars($row['auth2']) . '"',
+        'title="' . dhtmlspecialchars($row['ua2']) . '"',
+        '', '',
+    ], dhtmlspecialchars([
+        $row['id'],
+        $row['uid'],
+        $row['username'],
+        long2ip($row['ip1']),
+        substr($row['auth1'], 0, 7) . '...',
+        // $row['saltkey1'],
+        $row['ua1'],
+        date('Y-m-d H:i:s', $row['login_time1']),
+        date('Y-m-d H:i:s', $row['last_online_time1']),
+        long2ip($row['ip2']),
+        substr($row['auth2'], 0, 7) . '...',
+        // $row['saltkey2'],
+        ($row['ua1'] === $row['ua2']) ? 'UA相同' : $row['ua2'],
+        date('Y-m-d H:i:s', $row['login_time2']),
+        date('Y-m-d H:i:s', $row['last_online_time2']),
+    ]));
 }
 
 showtablefooter();

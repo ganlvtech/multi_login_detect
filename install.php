@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `pre_multi_login_session` (
   PRIMARY KEY (`id`),
   INDEX (`auth`),
   INDEX (`uid`)
-) ENGINE = MEMORY;
+) ENGINE = HEAP;
 
 CREATE TABLE IF NOT EXISTS `pre_multi_login_log` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',

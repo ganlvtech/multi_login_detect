@@ -39,18 +39,22 @@ showtableheader('当前登录用户');
 showsubtitle($fields);
 
 while ($row = DB::fetch($query)) {
-    showtablerow('', [], [
-            $row['id'],
-            $row['uid'],
-            $row['username'],
-            long2ip($row['ip']),
-            substr($row['auth'], 0, 7) . '...',
-            // $row['saltkey'],
-            $row['ua'],
-            date('Y-m-d H:i:s', $row['login_time']),
-            date('Y-m-d H:i:s', $row['last_online_time']),
-        ]
-    );
+    showtablerow('', [
+        '', '', '',
+        'title="' . dhtmlspecialchars(convertip($row['ip'])) . '"',
+        'title="' . dhtmlspecialchars($row['auth']) . '"',
+        '', '', '',
+    ], dhtmlspecialchars([
+        $row['id'],
+        $row['uid'],
+        $row['username'],
+        long2ip($row['ip']),
+        substr($row['auth'], 0, 7) . '...',
+        // $row['saltkey'],
+        $row['ua'],
+        date('Y-m-d H:i:s', $row['login_time']),
+        date('Y-m-d H:i:s', $row['last_online_time']),
+    ]));
 }
 
 showtablefooter();
