@@ -14,6 +14,7 @@ class plugin_multi_login_detect
     public static function global_header()
     {
         global $_G;
+
         $config = [
             'group_id_white_list' => [],
             'message' => '您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！',
@@ -27,8 +28,15 @@ class plugin_multi_login_detect
         $config = array_merge($config, $_G['cache']['plugin']['multi_login_detect']);
 
         // 判断用户是否登录（未登录用户的 uid 为 0），只有已登录用户才做检查。
-        $uid = $_G['uid'];
+        $uid = (int)$_G['uid'];
         if ($uid <= 0) {
+            return '';
+        }
+
+        // 如果是退出登录，则删除登录记录，不继续检查。
+        $auth = daddslashes($_G['cookie']['auth']);
+        if (CURSCRIPT === 'member' && CURMODULE === 'logging' && $_GET['action'] === 'logout') {
+            DB::delete('multi_login_session', "`uid` = '$uid' AND `auth` = '$auth'", 1);
             return '';
         }
 
@@ -42,7 +50,6 @@ class plugin_multi_login_detect
 
         // 如果当前登录会话 id 在数据库中不存在（刚登陆的新会话），则记录这个会话 id，不继续检查。
         $table_multi_login_session = DB::table('multi_login_session');
-        $auth = daddslashes($_G['cookie']['auth']);
         $ua = substr($_SERVER['HTTP_USER_AGENT'], 0, 1024);
         $original_session = DB::fetch_first("SELECT `id`, `login_time` FROM `$table_multi_login_session` WHERE `uid` = '$uid' AND `auth` = '$auth' LIMIT 1");
         if (!$original_session) {
@@ -97,8 +104,8 @@ class plugin_multi_login_detect
             'last_online_time2' => TIMESTAMP,
         ]);
 
-        // 清除之前的多余的登录信息
-        DB::delete('multi_login_session', "`id` < '{$latest_session['id']}' and `uid` = '$uid'");
+        // 清除多余的登录信息
+        DB::delete('multi_login_session', "`uid` = '$uid' AND `auth` = '$auth'", 1);
 
         // 如果异常登录封号
         if ($config['need_ban']) {
@@ -312,6 +319,10 @@ class plugin_multi_login_detect
 
 class plugin_multi_login_detect_member extends plugin_multi_login_detect
 {
+    public function logging_method()
+    {
+        self::global_header();
+    }
 }
 
 class mobileplugin_multi_login_detect extends plugin_multi_login_detect
