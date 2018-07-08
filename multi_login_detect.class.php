@@ -11,7 +11,7 @@ class plugin_multi_login_detect
      *
      * @return string
      */
-    public static function global_header()
+    public static function global_footer()
     {
         global $_G;
 
@@ -319,9 +319,9 @@ class plugin_multi_login_detect
 
 class plugin_multi_login_detect_member extends plugin_multi_login_detect
 {
-    public function logging_method()
+    public static function logging_method()
     {
-        self::global_header();
+        self::global_footer();
     }
 }
 
@@ -329,6 +329,6 @@ class mobileplugin_multi_login_detect extends plugin_multi_login_detect
 {
     public static function global_header_mobile()
     {
-        self::global_header();
+        self::global_footer();
     }
 }
