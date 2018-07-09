@@ -79,7 +79,7 @@ class plugin_multi_login_detect
 
         // 如果在同一IP地址段，则直接返回
         if ($config['allow_same_ip_range']) {
-            if (self::cidr_match($_G['clientip'], $original_session['ip' . '/' . $config['ip_cidr']])) {
+            if (self::cidr_match($_G['clientip'], $original_session['ip'] . '/' . $config['ip_cidr'])) {
                 return '';
             }
         }
