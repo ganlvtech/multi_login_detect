@@ -1,44 +1,51 @@
 <?php
 
+use Ganlv\MultiLoginDetect\Libraries\Helpers;
+use Ganlv\MultiLoginDetect\Libraries\Request;
+use Ganlv\MultiLoginDetect\Models\Session;
+
 if (!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
     exit('Access Denied');
 }
 
-$table = DB::table('multi_login_session');
-$page = (int)$_GET['page'];
-if ($page <= 0) {
-    $page = 1;
+require_once __DIR__ . '/Libraries/Helpers.php';
+require_once __DIR__ . '/Libraries/Request.php';
+require_once __DIR__ . '/Models/Session.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    Session::deleteBefore(TIMESTAMP - 20 * 60);
+    cpmsg(Helpers::lang('clear_session_ok'));
+    return;
 }
-$perpage = 20;
-$start = ($page - 1) * $perpage;
-$count = DB::result_first("SELECT COUNT(*) FROM `$table`");
-$mpurl = ADMINSCRIPT . '?' . http_build_query([
-        'action' => $_GET['action'],
+
+// 清空未活动的登录信息
+showtableheader(Helpers::lang('clear_session'));
+showformheader($_GET['action'] . '&' . http_build_query([
         'operation' => $_GET['operation'],
+        'do' => $_GET['do'],
         'identifier' => $_GET['identifier'],
         'pmod' => $_GET['pmod'],
-    ]);
-$multipage = multi($count, $perpage, $page, $mpurl);
+    ]));
+showsubmit('submit', Helpers::lang('clear_session'));
+showformfooter();
+showtablefooter();
 
-$query = DB::query("SELECT * FROM `$table` ORDER BY `id` DESC LIMIT $start, $perpage");
+// 当前登录用户
+$perpage = 20;
+$count = Session::count();
+$page = Request::page();
 
-$fields = [
-    'id' => 'ID',
-    'uid' => 'UID',
-    'username' => '用户名',
-    'ip' => 'IP',
-    'auth' => 'auth',
-    // 'saltkey' => 'saltkey',
-    'ua' => 'User Agent',
-    'login_time' => '登录时间',
-    'last_online_time' => '最后在线时间',
-];
+showtableheader(Helpers::lang('current_session'));
 
-showtableheader('当前登录用户');
-
+$fields = [];
+foreach (Session::fields() as $field) {
+    $fields[$field] = Helpers::lang('table_session_field_' . $field);
+}
+unset($fields['saltkey']);
 showsubtitle($fields);
 
-while ($row = DB::fetch($query)) {
+$rows = Session::fetchAllByPage($page, $perpage);
+foreach ($rows as $row) {
     showtablerow('', [
         '', '', '',
         'title="' . dhtmlspecialchars(convertip($row['ip'])) . '"',
@@ -48,16 +55,22 @@ while ($row = DB::fetch($query)) {
         $row['id'],
         $row['uid'],
         $row['username'],
-        long2ip($row['ip']),
+        $row['ip'],
         substr($row['auth'], 0, 7) . '...',
         // $row['saltkey'],
         $row['ua'],
-        date('Y-m-d H:i:s', $row['login_time']),
-        date('Y-m-d H:i:s', $row['last_online_time']),
+        Helpers::formatDate($row['login_time']),
+        Helpers::formatDate($row['last_online_time']),
     ]));
 }
-
 showtablefooter();
 
+$mpurl = ADMINSCRIPT . '?' . http_build_query([
+        'action' => $_GET['action'],
+        'operation' => $_GET['operation'],
+        'do' => $_GET['do'],
+        'identifier' => $_GET['identifier'],
+        'pmod' => $_GET['pmod'],
+    ]);
+$multipage = multi($count, $perpage, $page, $mpurl);
 echo $multipage;
-

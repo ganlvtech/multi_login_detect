@@ -14,7 +14,7 @@
             <item id="datatables"><![CDATA[]]></item>
             <item id="directory"><![CDATA[multi_login_detect/]]></item>
             <item id="copyright"><![CDATA[Ganlv]]></item>
-            <item id="version"><![CDATA[1.0.1]]></item>
+            <item id="version"><![CDATA[1.1]]></item>
             <item id="__modules">
                 <item id="0">
                     <item id="name"><![CDATA[multi_login_detect]]></item>
@@ -90,7 +90,7 @@
             <item id="2">
                 <item id="displayorder"><![CDATA[2]]></item>
                 <item id="title"><![CDATA[允许相同IP段重复登录]]></item>
-                <item id="description"><![CDATA[例如 127.0.0.1 与 127.0.0.254 同时登录，不会互相挤掉]]></item>
+                <item id="description"><![CDATA[例如 127.0.0.1 与 127.0.0.254 同时登录，不会互相挤掉。如果选否的话即使 IP 相同也会被挤掉。想在 IP 相同时不被挤掉请勾选是，同时在下方 IP 匹配位数处填写 32。]]></item>
                 <item id="variable"><![CDATA[allow_same_ip_range]]></item>
                 <item id="type"><![CDATA[radio]]></item>
                 <item id="value"><![CDATA[0]]></item>
@@ -99,7 +99,7 @@
             <item id="3">
                 <item id="displayorder"><![CDATA[3]]></item>
                 <item id="title"><![CDATA[IP匹配位数]]></item>
-                <item id="description"><![CDATA[即 CIDR，例如填写 24，就是前 24 位相同不会互相挤掉，最后 8 位可变，比如 127.0.0.0~127.0.0.255 互相不排斥]]></item>
+                <item id="description"><![CDATA[即 CIDR，例如填写 24，就是前 24 位相同不会互相挤掉，最后 8 位可变，比如 127.0.0.0 ~ 127.0.0.255 互相不排斥。若要 IP 完全相同的时候不被挤掉，请填写 32。]]></item>
                 <item id="variable"><![CDATA[ip_cidr]]></item>
                 <item id="type"><![CDATA[text]]></item>
                 <item id="value"><![CDATA[24]]></item>
@@ -142,6 +142,62 @@ status=锁定用户]]></item>
                 <item id="type"><![CDATA[text]]></item>
                 <item id="value"><![CDATA[您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！]]></item>
                 <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="8">
+                <item id="displayorder"><![CDATA[8]]></item>
+                <item id="title"><![CDATA[是否允许 auth 相同而 IP 或 UserAgent 不同]]></item>
+                <item id="description"><![CDATA[不允许的话可能在手机用户从 Wi-Fi 切换到数据网络时、手机用户更换浏览器 UA 时误判。推荐选择允许。]]></item>
+                <item id="variable"><![CDATA[allow_same_auth]]></item>
+                <item id="type"><![CDATA[radio]]></item>
+                <item id="value"><![CDATA[1]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="9">
+                <item id="displayorder"><![CDATA[8]]></item>
+                <item id="title"><![CDATA[是否允许 UserAgent 不同]]></item>
+                <item id="description"><![CDATA[当允许 auth 相同时，本选项才起作用。不允许的话可能在手机用户更换浏览器 UA 时可能误判。推荐选择允许。]]></item>
+                <item id="variable"><![CDATA[allow_different_ua]]></item>
+                <item id="type"><![CDATA[radio]]></item>
+                <item id="value"><![CDATA[1]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+        </item>
+        <item id="language">
+            <item id="scriptlang">
+                <item id="multi_login_detect_message"><![CDATA[您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！]]></item>
+                <item id="multi_login_detect_ban_reason"><![CDATA[您的帐户由于异地登录，您已被迫下线，同时已被封号，如果是误判需解封请联系管理！]]></item>
+                <item id="multi_login_detect_notify_user"><![CDATA[重复登录检测插件]]></item>
+                <item id="multi_login_detect_current_session"><![CDATA[当前登录用户]]></item>
+                <item id="multi_login_detect_multi_login_log"><![CDATA[重复登录日志]]></item>
+                <item id="multi_login_detect_clear_session"><![CDATA[清除超过 20 分钟未活动的登录信息]]></item>
+                <item id="multi_login_detect_clear_session_ok"><![CDATA[清除登录信息成功！]]></item>
+                <item id="multi_login_detect_clear_log"><![CDATA[清除 7 天前的日志信息]]></item>
+                <item id="multi_login_detect_clear_log_ok"><![CDATA[清除日志信息成功！]]></item>
+                <item id="multi_login_detect_same_user_agent"><![CDATA[UA 相同]]></item>
+                <item id="multi_login_detect_table_session_field_id"><![CDATA[ID]]></item>
+                <item id="multi_login_detect_table_session_field_uid"><![CDATA[UID]]></item>
+                <item id="multi_login_detect_table_session_field_username"><![CDATA[用户名]]></item>
+                <item id="multi_login_detect_table_session_field_ip"><![CDATA[IP]]></item>
+                <item id="multi_login_detect_table_session_field_auth"><![CDATA[Auth]]></item>
+                <item id="multi_login_detect_table_session_field_saltkey"><![CDATA[Salt Key]]></item>
+                <item id="multi_login_detect_table_session_field_ua"><![CDATA[User Agent]]></item>
+                <item id="multi_login_detect_table_session_field_login_time"><![CDATA[登录时间]]></item>
+                <item id="multi_login_detect_table_session_field_last_online_time"><![CDATA[最后在线时间]]></item>
+                <item id="multi_login_detect_table_log_field_id"><![CDATA[ID]]></item>
+                <item id="multi_login_detect_table_log_field_uid"><![CDATA[UID]]></item>
+                <item id="multi_login_detect_table_log_field_username"><![CDATA[用户名]]></item>
+                <item id="multi_login_detect_table_log_field_ip1"><![CDATA[最新的 IP]]></item>
+                <item id="multi_login_detect_table_log_field_auth1"><![CDATA[最新的 Auth]]></item>
+                <item id="multi_login_detect_table_log_field_saltkey1"><![CDATA[最新的 Salt Key]]></item>
+                <item id="multi_login_detect_table_log_field_ua1"><![CDATA[最新的 UA]]></item>
+                <item id="multi_login_detect_table_log_field_login_time1"><![CDATA[最后登录时间]]></item>
+                <item id="multi_login_detect_table_log_field_last_online_time1"><![CDATA[最后在线时间]]></item>
+                <item id="multi_login_detect_table_log_field_ip2"><![CDATA[被挤下线的 IP]]></item>
+                <item id="multi_login_detect_table_log_field_auth2"><![CDATA[被挤下线的 Auth]]></item>
+                <item id="multi_login_detect_table_log_field_saltkey2"><![CDATA[被挤下线的 Salt Key]]></item>
+                <item id="multi_login_detect_table_log_field_ua2"><![CDATA[被挤下线的 UA]]></item>
+                <item id="multi_login_detect_table_log_field_login_time2"><![CDATA[被挤下线的登录时间]]></item>
+                <item id="multi_login_detect_table_log_field_last_online_time2"><![CDATA[被挤下线的时间]]></item>
             </item>
         </item>
         <item id="installfile"><![CDATA[install.php]]></item>

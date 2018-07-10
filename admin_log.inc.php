@@ -1,50 +1,52 @@
 <?php
 
+use Ganlv\MultiLoginDetect\Libraries\Helpers;
+use Ganlv\MultiLoginDetect\Libraries\Request;
+use Ganlv\MultiLoginDetect\Models\Log;
+
 if (!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
     exit('Access Denied');
 }
 
-$table = DB::table('multi_login_log');
-$page = (int)$_GET['page'];
-if ($page <= 0) {
-    $page = 1;
+require_once __DIR__ . '/Libraries/Helpers.php';
+require_once __DIR__ . '/Libraries/Request.php';
+require_once __DIR__ . '/Models/Log.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    Log::deleteBefore(TIMESTAMP - 7 * 86400);
+    cpmsg(Helpers::lang('clear_log_ok'));
+    return;
 }
-$perpage = 20;
-$start = ($page - 1) * $perpage;
-$count = DB::result_first("SELECT COUNT(*) FROM `$table`");
-$mpurl = ADMINSCRIPT . '?' . http_build_query([
-        'action' => $_GET['action'],
+
+// 清空较早的日志
+showtableheader(Helpers::lang('clear_log'));
+showformheader($_GET['action'] . '&' . http_build_query([
         'operation' => $_GET['operation'],
+        'do' => $_GET['do'],
         'identifier' => $_GET['identifier'],
         'pmod' => $_GET['pmod'],
-    ]);
-$multipage = multi($count, $perpage, $page, $mpurl);
+    ]));
+showsubmit('submit', Helpers::lang('clear_log'));
+showformfooter();
+showtablefooter();
 
-$query = DB::query("SELECT * FROM `$table` ORDER BY `id` DESC LIMIT $start, $perpage");
+// 重复登录日志
+$perpage = 20;
+$count = Log::count();
+$page = Request::page();
 
-$fields = [
-    'id' => 'ID',
-    'uid' => 'UID',
-    'username' => '用户名',
-    'ip1' => '最新的IP',
-    'auth1' => '最新的auth',
-    // 'saltkey1' => '最新的saltkey',
-    'ua1' => '最新的UA',
-    'login_time1' => '最后登录时间',
-    'last_online_time1' => '最后在线时间',
-    'ip2' => '被挤下线的IP',
-    'auth2' => '被挤下线的auth',
-    // 'saltkey2' => '被挤下线的saltkey',
-    'ua2' => '被挤下线的UA',
-    'login_time2' => '被挤下线的登录时间',
-    'last_online_time2' => '被挤下线的时间',
-];
+showtableheader(Helpers::lang('multi_login_log'));
 
-showtableheader('重复登录日志');
-
+$fields = [];
+foreach (Log::fields() as $field) {
+    $fields[$field] = Helpers::lang('table_log_field_' . $field);
+}
+unset($fields['saltkey1']);
+unset($fields['saltkey2']);
 showsubtitle($fields);
 
-while ($row = DB::fetch($query)) {
+$rows = Log::fetchAllByPage($page, $perpage);
+foreach ($rows as $row) {
     showtablerow('', [
         '', '', '',
         'title="' . dhtmlspecialchars(convertip($row['ip1'])) . '"',
@@ -58,22 +60,29 @@ while ($row = DB::fetch($query)) {
         $row['id'],
         $row['uid'],
         $row['username'],
-        long2ip($row['ip1']),
+        $row['ip1'],
         substr($row['auth1'], 0, 7) . '...',
         // $row['saltkey1'],
         $row['ua1'],
-        date('Y-m-d H:i:s', $row['login_time1']),
-        date('Y-m-d H:i:s', $row['last_online_time1']),
-        long2ip($row['ip2']),
+        Helpers::formatDate($row['login_time1']),
+        Helpers::formatDate($row['last_online_time1']),
+        $row['ip2'],
         substr($row['auth2'], 0, 7) . '...',
         // $row['saltkey2'],
-        ($row['ua1'] === $row['ua2']) ? 'UA相同' : $row['ua2'],
-        date('Y-m-d H:i:s', $row['login_time2']),
-        date('Y-m-d H:i:s', $row['last_online_time2']),
+        ($row['ua1'] === $row['ua2']) ? Helpers::lang('same_user_agent') : $row['ua2'],
+        Helpers::formatDate($row['login_time2']),
+        Helpers::formatDate($row['last_online_time2']),
     ]));
 }
-
 showtablefooter();
 
+$mpurl = ADMINSCRIPT . '?' . http_build_query([
+        'action' => $_GET['action'],
+        'operation' => $_GET['operation'],
+        'do' => $_GET['do'],
+        'identifier' => $_GET['identifier'],
+        'pmod' => $_GET['pmod'],
+    ]);
+$multipage = multi($count, $perpage, $page, $mpurl);
 echo $multipage;
 
