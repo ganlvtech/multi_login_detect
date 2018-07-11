@@ -6,6 +6,8 @@ use DB;
 
 class Log
 {
+    const TABLE = 'multi_login_log';
+
     public static function fields()
     {
         return [
@@ -52,7 +54,7 @@ class Log
      */
     public static function insert($data)
     {
-        return DB::insert('multi_login_log', [
+        return DB::insert(self::TABLE, [
             'uid' => $data['uid'],
             'username' => mb_substr($data['username'], 0, 15),
             // 最新的登录信息
@@ -74,25 +76,52 @@ class Log
 
     public static function count()
     {
-        $table = DB::table('multi_login_log');
+        $table = DB::table(self::TABLE);
         return DB::result_first("SELECT COUNT(*) FROM `$table`");
     }
 
     public static function deleteBefore($timestamp)
     {
         $timestamp = daddslashes($timestamp);
-        return DB::delete('multi_login_log', "`last_online_time2` < '$timestamp'");
+        return DB::delete(self::TABLE, "`last_online_time2` < '$timestamp'");
     }
 
     public static function fetchAllByPage($page, $perpage = 20)
     {
-        $table = DB::table('multi_login_log');
+        $table = DB::table(self::TABLE);
         $start = ($page - 1) * $perpage;
         $sessions = DB::fetch_all("SELECT * FROM `$table` ORDER BY `id` DESC LIMIT $start, $perpage");
         foreach ($sessions as &$session) {
             $session['ip1'] = long2ip($session['ip1']);
             $session['ip2'] = long2ip($session['ip2']);
         }
+        return $sessions;
+    }
+
+    public static function fetchAllOfUidByPage($uid, $page, $perpage = 20)
+    {
+        $table = DB::table(self::TABLE);
+        $uid = daddslashes($uid);
+        $start = ($page - 1) * $perpage;
+        $sessions = DB::fetch_all("SELECT * FROM `$table` WHERE `uid` = '$uid' ORDER BY `id` DESC LIMIT $start, $perpage");
+        foreach ($sessions as &$session) {
+            $session['ip1'] = long2ip($session['ip1']);
+            $session['ip2'] = long2ip($session['ip2']);
+        }
+        return $sessions;
+    }
+
+    public static function userCount()
+    {
+        $table = DB::table(self::TABLE);
+        return DB::result_first("SELECT COUNT(DISTINCT(`uid`)) FROM `$table`");
+    }
+
+    public static function fetchCountGroupByUserByPage($page, $perpage = 20)
+    {
+        $table = DB::table(self::TABLE);
+        $start = ($page - 1) * $perpage;
+        $sessions = DB::fetch_all("SELECT `uid`, `username`, COUNT(*) AS `count` FROM `$table` GROUP BY `uid` ORDER BY `count` DESC LIMIT $start, $perpage");
         return $sessions;
     }
 }

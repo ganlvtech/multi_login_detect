@@ -53,4 +53,21 @@ class Request
         }
         return $page;
     }
+
+    public static function onlineTimeSpan()
+    {
+        global $_G;
+        return $_G['setting']['oltimespan'];
+    }
+
+    public static function searchUid()
+    {
+        if (isset($_GET['search_uid'])) {
+            return (int)$_GET['search_uid'];
+        } elseif (isset($_POST['search_uid'])) {
+            return (int)$_POST['search_uid'];
+        } else {
+            return false;
+        }
+    }
 }

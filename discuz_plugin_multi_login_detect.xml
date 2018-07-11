@@ -14,7 +14,7 @@
             <item id="datatables"><![CDATA[]]></item>
             <item id="directory"><![CDATA[multi_login_detect/]]></item>
             <item id="copyright"><![CDATA[Ganlv]]></item>
-            <item id="version"><![CDATA[1.1]]></item>
+            <item id="version"><![CDATA[1.1.1]]></item>
             <item id="__modules">
                 <item id="0">
                     <item id="name"><![CDATA[multi_login_detect]]></item>
@@ -56,6 +56,18 @@
                 <item id="3">
                     <item id="name"><![CDATA[admin_log]]></item>
                     <item id="menu"><![CDATA[重复登录日志]]></item>
+                    <item id="url"><![CDATA[]]></item>
+                    <item id="type"><![CDATA[3]]></item>
+                    <item id="adminid"><![CDATA[0]]></item>
+                    <item id="displayorder"><![CDATA[0]]></item>
+                    <item id="navtitle"><![CDATA[]]></item>
+                    <item id="navicon"><![CDATA[]]></item>
+                    <item id="navsubname"><![CDATA[]]></item>
+                    <item id="navsuburl"><![CDATA[]]></item>
+                </item>
+                <item id="4">
+                    <item id="name"><![CDATA[admin_log_top]]></item>
+                    <item id="menu"><![CDATA[重复登录用户排序]]></item>
                     <item id="url"><![CDATA[]]></item>
                     <item id="type"><![CDATA[3]]></item>
                     <item id="adminid"><![CDATA[0]]></item>
@@ -169,11 +181,13 @@ status=锁定用户]]></item>
                 <item id="multi_login_detect_notify_user"><![CDATA[重复登录检测插件]]></item>
                 <item id="multi_login_detect_current_session"><![CDATA[当前登录用户]]></item>
                 <item id="multi_login_detect_multi_login_log"><![CDATA[重复登录日志]]></item>
+                <item id="multi_login_detect_multi_login_log_top"><![CDATA[重复登录用户排序]]></item>
                 <item id="multi_login_detect_clear_session"><![CDATA[清除超过 20 分钟未活动的登录信息]]></item>
                 <item id="multi_login_detect_clear_session_ok"><![CDATA[清除登录信息成功！]]></item>
                 <item id="multi_login_detect_clear_log"><![CDATA[清除 7 天前的日志信息]]></item>
                 <item id="multi_login_detect_clear_log_ok"><![CDATA[清除日志信息成功！]]></item>
                 <item id="multi_login_detect_same_user_agent"><![CDATA[UA 相同]]></item>
+                <item id="multi_login_detect_search_uid"><![CDATA[查找 uid]]></item>
                 <item id="multi_login_detect_table_session_field_id"><![CDATA[ID]]></item>
                 <item id="multi_login_detect_table_session_field_uid"><![CDATA[UID]]></item>
                 <item id="multi_login_detect_table_session_field_username"><![CDATA[用户名]]></item>
@@ -198,6 +212,9 @@ status=锁定用户]]></item>
                 <item id="multi_login_detect_table_log_field_ua2"><![CDATA[被挤下线的 UA]]></item>
                 <item id="multi_login_detect_table_log_field_login_time2"><![CDATA[被挤下线的登录时间]]></item>
                 <item id="multi_login_detect_table_log_field_last_online_time2"><![CDATA[被挤下线的时间]]></item>
+                <item id="multi_login_detect_admin_log_top_table_field_count"><![CDATA[数量]]></item>
+                <item id="multi_login_detect_admin_log_top_table_field_view_log"><![CDATA[查看记录]]></item>
+                <item id="multi_login_detect_admin_log_top_table_field_search_user"><![CDATA[查找用户]]></item>
             </item>
         </item>
         <item id="installfile"><![CDATA[install.php]]></item>

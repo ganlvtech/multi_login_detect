@@ -26,7 +26,7 @@ showformheader($_GET['action'] . '&' . http_build_query([
         'identifier' => $_GET['identifier'],
         'pmod' => $_GET['pmod'],
     ]));
-showsubmit('submit', Helpers::lang('clear_session'));
+showsubmit('submit', Helpers::lang('clear_session'), '', '', '', false);
 showformfooter();
 showtablefooter();
 

@@ -134,6 +134,19 @@ class MultiLoginDetect
     }
 
     /**
+     * 用户是否仍在线
+     *
+     * @param int $last_online_time 最后在线时间
+     *
+     * @return bool
+     */
+    public static function isOnline($last_online_time)
+    {
+        return TIMESTAMP - $last_online_time < Request::onlineTimeSpan() * 60;
+    }
+
+
+    /**
      * 判断是否是重复登录
      *
      * @return bool|array 异常登录的 session1

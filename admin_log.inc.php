@@ -12,7 +12,7 @@ require_once __DIR__ . '/Libraries/Helpers.php';
 require_once __DIR__ . '/Libraries/Request.php';
 require_once __DIR__ . '/Models/Log.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['clear_log']) {
     Log::deleteBefore(TIMESTAMP - 7 * 86400);
     cpmsg(Helpers::lang('clear_log_ok'));
     return;
@@ -26,7 +26,23 @@ showformheader($_GET['action'] . '&' . http_build_query([
         'identifier' => $_GET['identifier'],
         'pmod' => $_GET['pmod'],
     ]));
-showsubmit('submit', Helpers::lang('clear_log'));
+showhiddenfields([
+    'clear_log' => 1,
+]);
+showsubmit('submit', Helpers::lang('clear_log'), '', '', '', false);
+showformfooter();
+showtablefooter();
+
+// 搜索 UID
+showtableheader(Helpers::lang('search_uid'));
+showformheader($_GET['action'] . '&' . http_build_query([
+        'operation' => $_GET['operation'],
+        'do' => $_GET['do'],
+        'identifier' => $_GET['identifier'],
+        'pmod' => $_GET['pmod'],
+    ]), '', 'cpform');
+showsetting(Helpers::lang('search_uid'), 'search_uid', '', 'text');
+showsubmit('submit', Helpers::lang('search_uid'));
 showformfooter();
 showtablefooter();
 
@@ -45,7 +61,11 @@ unset($fields['saltkey1']);
 unset($fields['saltkey2']);
 showsubtitle($fields);
 
-$rows = Log::fetchAllByPage($page, $perpage);
+if ($search_uid = Request::searchUid()) {
+    $rows = Log::fetchAllOfUidByPage($search_uid, $page, $perpage);
+} else {
+    $rows = Log::fetchAllByPage($page, $perpage);
+}
 foreach ($rows as $row) {
     showtablerow('', [
         '', '', '',

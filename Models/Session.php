@@ -6,6 +6,8 @@ use DB;
 
 class Session
 {
+    const TABLE = 'multi_login_session';
+
     public static function fields()
     {
         return [
@@ -32,7 +34,7 @@ class Session
     {
         $auth = substr($auth, 0, 255);
         $auth = daddslashes($auth);
-        return DB::delete('multi_login_session', "`auth` = '$auth'", 1);
+        return DB::delete(self::TABLE, "`auth` = '$auth'", 1);
     }
 
     /**
@@ -44,7 +46,7 @@ class Session
      */
     public static function fetchByAuth($auth)
     {
-        $table = DB::table('multi_login_session');
+        $table = DB::table(self::TABLE);
         $auth = substr($auth, 0, 255);
         $auth = daddslashes($auth);
         $session = DB::fetch_first("SELECT * FROM `$table` WHERE `auth` = '$auth' LIMIT 1");
@@ -63,7 +65,7 @@ class Session
      */
     public static function fetchLatestByUid($uid)
     {
-        $table = DB::table('multi_login_session');
+        $table = DB::table(self::TABLE);
         $uid = daddslashes($uid);
         $session = DB::fetch_first("SELECT * FROM `$table` WHERE `uid` = '$uid' ORDER BY `id` DESC LIMIT 1");
         if ($session) {
@@ -89,7 +91,7 @@ class Session
      */
     public static function insert($data)
     {
-        return DB::insert('multi_login_session', [
+        return DB::insert(self::TABLE, [
             'uid' => $data['uid'],
             'username' => mb_substr($data['username'], 0, 15),
             'ip' => ip2long($data['ip']),
@@ -111,7 +113,7 @@ class Session
     public static function touchById($id)
     {
         $id = daddslashes($id);
-        return DB::update('multi_login_session', [
+        return DB::update(self::TABLE, [
             'last_online_time' => TIMESTAMP,
         ], "`id` = '$id'");
     }
@@ -119,18 +121,18 @@ class Session
     public static function deleteBefore($timestamp)
     {
         $timestamp = daddslashes($timestamp);
-        return DB::delete('multi_login_session', "`last_online_time` < '$timestamp'");
+        return DB::delete(self::TABLE, "`last_online_time` < '$timestamp'");
     }
 
     public static function count()
     {
-        $table = DB::table('multi_login_session');
+        $table = DB::table(self::TABLE);
         return DB::result_first("SELECT COUNT(*) FROM `$table`");
     }
 
     public static function fetchAllByPage($page, $perpage = 20)
     {
-        $table = DB::table('multi_login_session');
+        $table = DB::table(self::TABLE);
         $start = ($page - 1) * $perpage;
         $sessions = DB::fetch_all("SELECT * FROM `$table` ORDER BY `id` DESC LIMIT $start, $perpage");
         foreach ($sessions as &$session) {
