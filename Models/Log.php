@@ -31,6 +31,12 @@ class Log
         ];
     }
 
+    public static function decode($data) {
+        $data['ip1'] = long2ip($data['ip1']);
+        $data['ip2'] = long2ip($data['ip2']);
+        return $data;
+    }
+
     /**
      * 插入log
      *
@@ -80,33 +86,54 @@ class Log
         return DB::result_first("SELECT COUNT(*) FROM `$table`");
     }
 
+    public static function countOfUid($uid)
+    {
+        $table = DB::table(self::TABLE);
+        $uid = daddslashes($uid);
+        return DB::result_first("SELECT COUNT(*) FROM `$table` WHERE `uid` = '$uid'");
+    }
+
+    /**
+     * @param int $timestamp
+     *
+     * @return bool
+     */
     public static function deleteBefore($timestamp)
     {
-        $timestamp = daddslashes($timestamp);
         return DB::delete(self::TABLE, "`last_online_time2` < '$timestamp'");
     }
 
+    /**
+     * @param int $page
+     * @param int $perpage
+     *
+     * @return array
+     */
     public static function fetchAllByPage($page, $perpage = 20)
     {
         $table = DB::table(self::TABLE);
         $start = ($page - 1) * $perpage;
         $sessions = DB::fetch_all("SELECT * FROM `$table` ORDER BY `id` DESC LIMIT $start, $perpage");
         foreach ($sessions as &$session) {
-            $session['ip1'] = long2ip($session['ip1']);
-            $session['ip2'] = long2ip($session['ip2']);
+            $session = self::decode($session);
         }
         return $sessions;
     }
 
+    /**
+     * @param int $uid
+     * @param int $page
+     * @param int $perpage
+     *
+     * @return array
+     */
     public static function fetchAllOfUidByPage($uid, $page, $perpage = 20)
     {
         $table = DB::table(self::TABLE);
-        $uid = daddslashes($uid);
         $start = ($page - 1) * $perpage;
         $sessions = DB::fetch_all("SELECT * FROM `$table` WHERE `uid` = '$uid' ORDER BY `id` DESC LIMIT $start, $perpage");
         foreach ($sessions as &$session) {
-            $session['ip1'] = long2ip($session['ip1']);
-            $session['ip2'] = long2ip($session['ip2']);
+            $session = self::decode($session);
         }
         return $sessions;
     }
@@ -117,6 +144,12 @@ class Log
         return DB::result_first("SELECT COUNT(DISTINCT(`uid`)) FROM `$table`");
     }
 
+    /**
+     * @param int $page
+     * @param int $perpage
+     *
+     * @return array
+     */
     public static function fetchCountGroupByUserByPage($page, $perpage = 20)
     {
         $table = DB::table(self::TABLE);

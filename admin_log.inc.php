@@ -48,7 +48,6 @@ showtablefooter();
 
 // 重复登录日志
 $perpage = 20;
-$count = Log::count();
 $page = Request::page();
 
 showtableheader(Helpers::lang('multi_login_log'));
@@ -63,8 +62,10 @@ showsubtitle($fields);
 
 if ($search_uid = Request::searchUid()) {
     $rows = Log::fetchAllOfUidByPage($search_uid, $page, $perpage);
+    $count = Log::countOfUid($search_uid);
 } else {
     $rows = Log::fetchAllByPage($page, $perpage);
+    $count = Log::count();
 }
 foreach ($rows as $row) {
     showtablerow('', [
@@ -96,13 +97,17 @@ foreach ($rows as $row) {
 }
 showtablefooter();
 
-$mpurl = ADMINSCRIPT . '?' . http_build_query([
-        'action' => $_GET['action'],
-        'operation' => $_GET['operation'],
-        'do' => $_GET['do'],
-        'identifier' => $_GET['identifier'],
-        'pmod' => $_GET['pmod'],
-    ]);
+$query = [
+    'action' => $_GET['action'],
+    'operation' => $_GET['operation'],
+    'do' => $_GET['do'],
+    'identifier' => $_GET['identifier'],
+    'pmod' => $_GET['pmod'],
+];
+if ($search_uid) {
+    $query['search_uid'] = $search_uid;
+}
+$mpurl = ADMINSCRIPT . '?' . http_build_query($query);
 $multipage = multi($count, $perpage, $page, $mpurl);
 echo $multipage;
 

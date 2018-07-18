@@ -7,7 +7,7 @@ class Request
     public static function groupId()
     {
         global $_G;
-        return (int)$_G['group']['groupid'];
+        return (int)$_G['groupid'];
     }
 
     public static function uid()
@@ -19,25 +19,25 @@ class Request
     public static function username()
     {
         global $_G;
-        return $_G['member']['username'];
+        return (string)$_G['username'];
     }
 
     public static function ip()
     {
         global $_G;
-        return $_G['clientip'];
+        return (string)$_G['clientip'];
     }
 
     public static function auth()
     {
         global $_G;
-        return $_G['cookie']['auth'];
+        return (string)$_G['cookie']['auth'];
     }
 
     public static function saltKey()
     {
         global $_G;
-        return $_G['cookie']['saltkey'];
+        return (string)$_G['cookie']['saltkey'];
     }
 
     public static function userAgent()
@@ -54,10 +54,15 @@ class Request
         return $page;
     }
 
+    /**
+     * 全局 > 站点功能 > 其他 > 用户在线时间更新时长(分钟)
+     *
+     * @return int 分钟（默认为 10）
+     */
     public static function onlineTimeSpan()
     {
         global $_G;
-        return $_G['setting']['oltimespan'];
+        return isset($_G['setting']['oltimespan']) ? (int)$_G['setting']['oltimespan'] : 10;
     }
 
     public static function searchUid()

@@ -23,6 +23,12 @@ class Session
         ];
     }
 
+    public static function decode($data)
+    {
+        $data['ip'] = long2ip($data['ip']);
+        return $data;
+    }
+
     /**
      * 删除session表的一条记录
      *
@@ -33,8 +39,8 @@ class Session
     public static function deleteByAuth($auth)
     {
         $auth = substr($auth, 0, 255);
-        $auth = daddslashes($auth);
-        return DB::delete(self::TABLE, "`auth` = '$auth'", 1);
+        $auth = DB::quote($auth);
+        return DB::delete(self::TABLE, "`auth` = $auth", 1);
     }
 
     /**
@@ -48,10 +54,10 @@ class Session
     {
         $table = DB::table(self::TABLE);
         $auth = substr($auth, 0, 255);
-        $auth = daddslashes($auth);
-        $session = DB::fetch_first("SELECT * FROM `$table` WHERE `auth` = '$auth' LIMIT 1");
+        $auth = DB::quote($auth);
+        $session = DB::fetch_first("SELECT * FROM `$table` WHERE `auth` = $auth LIMIT 1");
         if ($session) {
-            $session['ip'] = long2ip($session['ip']);
+            $session = self::decode($session);
         }
         return $session;
     }
@@ -66,10 +72,9 @@ class Session
     public static function fetchLatestByUid($uid)
     {
         $table = DB::table(self::TABLE);
-        $uid = daddslashes($uid);
         $session = DB::fetch_first("SELECT * FROM `$table` WHERE `uid` = '$uid' ORDER BY `id` DESC LIMIT 1");
         if ($session) {
-            $session['ip'] = long2ip($session['ip']);
+            $session = self::decode($session);
         }
         return $session;
     }
@@ -112,15 +117,18 @@ class Session
      */
     public static function touchById($id)
     {
-        $id = daddslashes($id);
         return DB::update(self::TABLE, [
             'last_online_time' => TIMESTAMP,
         ], "`id` = '$id'");
     }
 
+    /**
+     * @param int $timestamp
+     *
+     * @return bool
+     */
     public static function deleteBefore($timestamp)
     {
-        $timestamp = daddslashes($timestamp);
         return DB::delete(self::TABLE, "`last_online_time` < '$timestamp'");
     }
 
@@ -130,13 +138,19 @@ class Session
         return DB::result_first("SELECT COUNT(*) FROM `$table`");
     }
 
+    /**
+     * @param int $page
+     * @param int $perpage
+     *
+     * @return array
+     */
     public static function fetchAllByPage($page, $perpage = 20)
     {
         $table = DB::table(self::TABLE);
         $start = ($page - 1) * $perpage;
         $sessions = DB::fetch_all("SELECT * FROM `$table` ORDER BY `id` DESC LIMIT $start, $perpage");
         foreach ($sessions as &$session) {
-            $session['ip'] = long2ip($session['ip']);
+            $session = self::decode($session);
         }
         return $sessions;
     }

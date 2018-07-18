@@ -57,7 +57,7 @@ foreach ($rows as $row) {
     ]);
     echo '<input type="submit" name="submit" value="1" id="' . $search_user_form_submit_id . '">';
     showformfooter();
-    echo "<a href=\"javascript:\" onclick=\"submit_search_user_form('{$search_user_form_submit_id}')\">{$lang_admin_log_top_table_field_view_log}</a>";
+    echo "<a href=\"javascript:\" onclick=\"submit_search_user_form('{$search_user_form_submit_id}')\">{$lang_admin_log_top_table_field_search_user}</a>";
     $search_user = ob_get_clean();
 
     showtablerow('', [], [

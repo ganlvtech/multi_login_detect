@@ -145,7 +145,6 @@ class MultiLoginDetect
         return TIMESTAMP - $last_online_time < Request::onlineTimeSpan() * 60;
     }
 
-
     /**
      * 判断是否是重复登录
      *
