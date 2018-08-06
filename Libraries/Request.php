@@ -65,6 +65,11 @@ class Request
         return isset($_G['setting']['oltimespan']) ? (int)$_G['setting']['oltimespan'] : 10;
     }
 
+    public static function sessionExpiredBefore()
+    {
+        return TIMESTAMP - self::onlineTimeSpan() * 60;
+    }
+
     public static function searchUid()
     {
         if (isset($_GET['search_uid'])) {

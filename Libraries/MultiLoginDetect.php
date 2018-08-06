@@ -142,7 +142,7 @@ class MultiLoginDetect
      */
     public static function isOnline($last_online_time)
     {
-        return TIMESTAMP - $last_online_time < Request::onlineTimeSpan() * 60;
+        return $last_online_time > Request::sessionExpiredBefore();
     }
 
     /**
@@ -217,6 +217,8 @@ class MultiLoginDetect
      */
     public function tryHandleMultiLogin()
     {
+        Session::deleteBefore(Request::sessionExpiredBefore());
+
         $session1 = $this->detectMultiLogin();
         if (!$session1) {
             return false;

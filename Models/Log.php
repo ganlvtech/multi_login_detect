@@ -157,4 +157,15 @@ class Log
         $sessions = DB::fetch_all("SELECT `uid`, `username`, COUNT(*) AS `count` FROM `$table` GROUP BY `uid` ORDER BY `count` DESC LIMIT $start, $perpage");
         return $sessions;
     }
+
+    public static function fetchOrderByIpCountByPage($page, $perpage = 20)
+    {
+        $table = DB::table(self::TABLE);
+        $start = ($page - 1) * $perpage;
+        $sessions = DB::fetch_all("SELECT `$table`.*, `ip_count`.`count` FROM `$table` LEFT JOIN (SELECT `ip2`, COUNT(*) AS `count` FROM `$table` GROUP BY `ip2`) AS `ip_count` ON `$table`.`ip2` = `ip_count`.`ip2` ORDER BY `ip_count`.`count` DESC LIMIT $start, $perpage");
+        foreach ($sessions as &$session) {
+            $session = self::decode($session);
+        }
+        return $sessions;
+    }
 }
