@@ -19,6 +19,7 @@ class MultiLoginDetect
         'ban_type' => 'post',
         'ban_time' => 86400,
         'ban_reason' => '',
+        'session_keep_time' => 10,
     ];
     /** @var array 当前 session */
     protected $currentSession = [];
@@ -53,6 +54,7 @@ class MultiLoginDetect
             'ban_type' => 'post',
             'ban_time' => 86400,
             'ban_reason' => Helpers::lang('ban_reason'),
+            'session_keep_time' => 10,
         ];
         $config = array_merge($defaultConfig, $config);
         if (!is_array($config['group_id_white_list'])) {
@@ -70,6 +72,7 @@ class MultiLoginDetect
         $config['need_ban'] = (bool)$config['need_ban'];
         $config['ban_time'] = (int)$config['ban_time'];
         $config['ban_reason'] = (string)$config['ban_reason'];
+        $config['session_keep_time'] = (int)$config['session_keep_time'];
         $this->config = $config;
     }
 
@@ -217,7 +220,10 @@ class MultiLoginDetect
      */
     public function tryHandleMultiLogin()
     {
-        Session::deleteBefore(Request::sessionExpiredBefore());
+        // 自动清除较早的 session
+        if ($this->config['session_keep_time'] > 0) {
+            Session::deleteBefore(TIMESTAMP - $this->config['session_keep_time'] * 60);
+        }
 
         $session1 = $this->detectMultiLogin();
         if (!$session1) {

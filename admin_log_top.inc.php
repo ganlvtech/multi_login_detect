@@ -12,9 +12,9 @@ require_once __DIR__ . '/Libraries/Helpers.php';
 require_once __DIR__ . '/Libraries/Request.php';
 require_once __DIR__ . '/Models/Log.php';
 
-$perpage = 20;
-$count = Log::count();
+$perpage = Request::perPage();
 $page = Request::page();
+$count = Log::count();
 
 showtableheader(Helpers::lang('multi_login_log_top'));
 
@@ -28,6 +28,7 @@ showsubtitle([
 
 global $_G;
 $_G['setting_JS'] .= <<<'EOD'
+;
 function submit_search_user_form(submit_button_id) {
     document.getElementById(submit_button_id).click();
 }
@@ -70,13 +71,6 @@ foreach ($rows as $row) {
 }
 showtablefooter();
 
-$mpurl = ADMINSCRIPT . '?' . http_build_query([
-        'action' => $_GET['action'],
-        'operation' => $_GET['operation'],
-        'do' => $_GET['do'],
-        'identifier' => $_GET['identifier'],
-        'pmod' => $_GET['pmod'],
-    ]);
+$mpurl = ADMINSCRIPT . '?' . Request::queryWithoutPage();
 $multipage = multi($count, $perpage, $page, $mpurl);
 echo $multipage;
-

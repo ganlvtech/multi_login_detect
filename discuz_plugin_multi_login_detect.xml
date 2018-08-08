@@ -14,7 +14,7 @@
             <item id="datatables"><![CDATA[]]></item>
             <item id="directory"><![CDATA[multi_login_detect/]]></item>
             <item id="copyright"><![CDATA[Ganlv]]></item>
-            <item id="version"><![CDATA[1.1.3]]></item>
+            <item id="version"><![CDATA[1.1.4]]></item>
             <item id="__modules">
                 <item id="0">
                     <item id="name"><![CDATA[multi_login_detect]]></item>
@@ -68,6 +68,18 @@
                 <item id="4">
                     <item id="name"><![CDATA[admin_log_top]]></item>
                     <item id="menu"><![CDATA[重复登录用户排序]]></item>
+                    <item id="url"><![CDATA[]]></item>
+                    <item id="type"><![CDATA[3]]></item>
+                    <item id="adminid"><![CDATA[0]]></item>
+                    <item id="displayorder"><![CDATA[0]]></item>
+                    <item id="navtitle"><![CDATA[]]></item>
+                    <item id="navicon"><![CDATA[]]></item>
+                    <item id="navsubname"><![CDATA[]]></item>
+                    <item id="navsuburl"><![CDATA[]]></item>
+                </item>
+                <item id="5">
+                    <item id="name"><![CDATA[admin_operation]]></item>
+                    <item id="menu"><![CDATA[操作]]></item>
                     <item id="url"><![CDATA[]]></item>
                     <item id="type"><![CDATA[3]]></item>
                     <item id="adminid"><![CDATA[0]]></item>
@@ -165,12 +177,21 @@ status=锁定用户]]></item>
                 <item id="extra"><![CDATA[]]></item>
             </item>
             <item id="9">
-                <item id="displayorder"><![CDATA[8]]></item>
+                <item id="displayorder"><![CDATA[9]]></item>
                 <item id="title"><![CDATA[是否允许 UserAgent 不同]]></item>
                 <item id="description"><![CDATA[当允许 auth 相同时，本选项才起作用。不允许的话可能在手机用户更换浏览器 UA 时可能误判。推荐选择允许。]]></item>
                 <item id="variable"><![CDATA[allow_different_ua]]></item>
                 <item id="type"><![CDATA[radio]]></item>
                 <item id="value"><![CDATA[1]]></item>
+                <item id="extra"><![CDATA[]]></item>
+            </item>
+            <item id="10">
+                <item id="displayorder"><![CDATA[10]]></item>
+                <item id="title"><![CDATA[自动清理多久以前的 session]]></item>
+                <item id="description"><![CDATA[单位是分钟，一小时填 60，一天填 1440，填写小于等于 0 的数值则不会自动清理。]]></item>
+                <item id="variable"><![CDATA[session_keep_time]]></item>
+                <item id="type"><![CDATA[text]]></item>
+                <item id="value"><![CDATA[10]]></item>
                 <item id="extra"><![CDATA[]]></item>
             </item>
         </item>

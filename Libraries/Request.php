@@ -45,6 +45,15 @@ class Request
         return substr($_SERVER['HTTP_USER_AGENT'], 0, 1024);
     }
 
+    public static function perPage()
+    {
+        $page = (int)$_GET['per_page'];
+        if ($page <= 0) {
+            $page = 20;
+        }
+        return $page;
+    }
+
     public static function page()
     {
         $page = (int)$_GET['page'];
@@ -52,6 +61,21 @@ class Request
             $page = 1;
         }
         return $page;
+    }
+
+    public static function queryWithoutPage()
+    {
+        $vars = $_GET;
+        unset($vars['page']);
+        return http_build_query($vars);
+    }
+
+    public static function formHeaderAction()
+    {
+        $vars = $_GET;
+        unset($vars['page']);
+        unset($vars['action']);
+        return $_GET['action'] . '&' . http_build_query($vars);
     }
 
     /**

@@ -154,4 +154,29 @@ class Session
         }
         return $sessions;
     }
+
+    public static function countOfUid($uid)
+    {
+        $table = DB::table(self::TABLE);
+        $uid = daddslashes($uid);
+        return DB::result_first("SELECT COUNT(*) FROM `$table` WHERE `uid` = '$uid'");
+    }
+
+    /**
+     * @param int $uid
+     * @param int $page
+     * @param int $perpage
+     *
+     * @return array
+     */
+    public static function fetchAllOfUidByPage($uid, $page, $perpage = 20)
+    {
+        $table = DB::table(self::TABLE);
+        $start = ($page - 1) * $perpage;
+        $sessions = DB::fetch_all("SELECT * FROM `$table` WHERE `uid` = '$uid' ORDER BY `id` DESC LIMIT $start, $perpage");
+        foreach ($sessions as &$session) {
+            $session = self::decode($session);
+        }
+        return $sessions;
+    }
 }

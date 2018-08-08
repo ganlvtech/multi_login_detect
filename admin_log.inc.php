@@ -12,52 +12,27 @@ require_once __DIR__ . '/Libraries/Helpers.php';
 require_once __DIR__ . '/Libraries/Request.php';
 require_once __DIR__ . '/Models/Log.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['clear_log']) {
-    Log::deleteBefore(TIMESTAMP - 7 * 86400);
-    cpmsg(Helpers::lang('clear_log_ok'));
-    return;
-}
-
-// 清空较早的日志
-showtableheader(Helpers::lang('clear_log'));
-showformheader($_GET['action'] . '&' . http_build_query([
-        'operation' => $_GET['operation'],
-        'do' => $_GET['do'],
-        'identifier' => $_GET['identifier'],
-        'pmod' => $_GET['pmod'],
-    ]));
-showhiddenfields([
-    'clear_log' => 1,
-]);
-showsubmit('submit', Helpers::lang('clear_log'), '', '', '', false);
-showformfooter();
-showtablefooter();
-
 // 搜索 UID
 showtableheader(Helpers::lang('search_uid'));
-showformheader($_GET['action'] . '&' . http_build_query([
-        'operation' => $_GET['operation'],
-        'do' => $_GET['do'],
-        'identifier' => $_GET['identifier'],
-        'pmod' => $_GET['pmod'],
-    ]), '', 'cpform');
+showformheader(Request::formHeaderAction());
 showsetting(Helpers::lang('search_uid'), 'search_uid', '', 'text');
 showsubmit('submit', Helpers::lang('search_uid'));
 showformfooter();
 showtablefooter();
 
 // 重复登录日志
-$perpage = 20;
+$perpage = Request::perPage();
 $page = Request::page();
 
 showtableheader(Helpers::lang('multi_login_log'));
 
 $fields = [];
 foreach (Log::fields() as $field) {
+    if (in_array($field, ['saltkey1', 'saltkey2'])) {
+        continue;
+    }
     $fields[$field] = Helpers::lang('table_log_field_' . $field);
 }
-unset($fields['saltkey1']);
-unset($fields['saltkey2']);
 showsubtitle($fields);
 
 if ($search_uid = Request::searchUid()) {
@@ -67,6 +42,7 @@ if ($search_uid = Request::searchUid()) {
     $rows = Log::fetchAllByPage($page, $perpage);
     $count = Log::count();
 }
+
 foreach ($rows as $row) {
     showtablerow('', [
         '', '', '',
@@ -97,17 +73,7 @@ foreach ($rows as $row) {
 }
 showtablefooter();
 
-$query = [
-    'action' => $_GET['action'],
-    'operation' => $_GET['operation'],
-    'do' => $_GET['do'],
-    'identifier' => $_GET['identifier'],
-    'pmod' => $_GET['pmod'],
-];
-if ($search_uid) {
-    $query['search_uid'] = $search_uid;
-}
-$mpurl = ADMINSCRIPT . '?' . http_build_query($query);
+$mpurl = ADMINSCRIPT . '?' . Request::queryWithoutPage();
 $multipage = multi($count, $perpage, $page, $mpurl);
 echo $multipage;
 
