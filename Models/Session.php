@@ -132,6 +132,16 @@ class Session
         return DB::delete(self::TABLE, "`last_online_time` < '$timestamp'");
     }
 
+    /**
+     * @param int $timestamp
+     *
+     * @return bool
+     */
+    public static function deleteByUidBefore($uid, $timestamp)
+    {
+        return DB::delete(self::TABLE, "`uid` = '$uid' AND `last_online_time` < '$timestamp'");
+    }
+
     public static function count()
     {
         $table = DB::table(self::TABLE);

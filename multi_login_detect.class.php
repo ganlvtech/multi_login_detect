@@ -24,6 +24,7 @@ class plugin_multi_login_detect
     {
         global $_G;
         $multiLoginDetect = new MultiLoginDetect($_G['cache']['plugin']['multi_login_detect']);
+        $multiLoginDetect->deleteOldSession();
         $multiLoginDetect->tryHandleMultiLogin();
         return '';
     }

@@ -149,6 +149,18 @@ class MultiLoginDetect
     }
 
     /**
+     * 自动清除较早的 session
+     */
+    public function deleteOldSession()
+    {
+        if (self::isLogin()) {
+            if ($this->config['session_keep_time'] > 0) {
+                Session::deleteByUidBefore(Request::uid(),TIMESTAMP - $this->config['session_keep_time'] * 60);
+            }
+        }
+    }
+
+    /**
      * 判断是否是重复登录
      *
      * @return bool|array 异常登录的 session1
@@ -220,11 +232,6 @@ class MultiLoginDetect
      */
     public function tryHandleMultiLogin()
     {
-        // 自动清除较早的 session
-        if ($this->config['session_keep_time'] > 0) {
-            Session::deleteBefore(TIMESTAMP - $this->config['session_keep_time'] * 60);
-        }
-
         $session1 = $this->detectMultiLogin();
         if (!$session1) {
             return false;
