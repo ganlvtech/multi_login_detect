@@ -45,20 +45,20 @@ class Request
         return substr($_SERVER['HTTP_USER_AGENT'], 0, 1024);
     }
 
-    public static function perPage()
-    {
-        $page = (int)$_GET['per_page'];
-        if ($page <= 0) {
-            $page = 20;
-        }
-        return $page;
-    }
-
     public static function page()
     {
         $page = (int)$_GET['page'];
         if ($page <= 0) {
             $page = 1;
+        }
+        return $page;
+    }
+
+    public static function perPage()
+    {
+        $page = (int)$_GET['per_page'];
+        if ($page <= 0) {
+            $page = 20;
         }
         return $page;
     }
@@ -100,6 +100,17 @@ class Request
             return (int)$_GET['search_uid'];
         } elseif (isset($_POST['search_uid'])) {
             return (int)$_POST['search_uid'];
+        } else {
+            return false;
+        }
+    }
+
+    public static function lastOnlineTime1()
+    {
+        if (isset($_GET['last_online_time1'])) {
+            return (int)$_GET['last_online_time1'];
+        } elseif (isset($_POST['last_online_time1'])) {
+            return (int)$_POST['last_online_time1'];
         } else {
             return false;
         }

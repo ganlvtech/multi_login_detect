@@ -158,6 +158,27 @@ class Log
         return $sessions;
     }
 
+    /**
+     * @param int $page
+     * @param int $perpage
+     *
+     * @return array
+     */
+    public static function fetchCountGroupByUserByPageAfter($last_online_time1, $page, $perpage = 20)
+    {
+        $table = DB::table(self::TABLE);
+        $start = ($page - 1) * $perpage;
+        $sessions = DB::fetch_all("SELECT `uid`, `username`, COUNT(*) AS `count` FROM `$table` WHERE `last_online_time1` > '$last_online_time1' GROUP BY `uid` ORDER BY `count` DESC LIMIT $start, $perpage");
+        return $sessions;
+    }
+
+    /**
+     * @param $page
+     * @param int $perpage
+     * @todo not used
+     *
+     * @return array
+     */
     public static function fetchOrderByIpCountByPage($page, $perpage = 20)
     {
         $table = DB::table(self::TABLE);

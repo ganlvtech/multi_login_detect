@@ -12,9 +12,40 @@ require_once __DIR__ . '/Libraries/Helpers.php';
 require_once __DIR__ . '/Libraries/Request.php';
 require_once __DIR__ . '/Models/Log.php';
 
+// Time range
+$options = [
+    [
+        'last_online_time1' => 0,
+        'lang' => 'all_before',
+    ],
+    [
+        'last_online_time1' => TIMESTAMP - 7 * 24 * 60 * 60,
+        'lang' => 'last_7_days',
+    ],
+    [
+        'last_online_time1' => TIMESTAMP - 3 * 24 * 60 * 60,
+        'lang' => 'last_3_days',
+    ],
+    [
+        'last_online_time1' => TIMESTAMP - 24 * 60 * 60,
+        'lang' => 'last_1_days',
+    ],
+];
+showtableheader(Helpers::lang('time_range'));
+foreach ($options as $option) {
+    showformheader(Request::formHeaderAction());
+    showhiddenfields([
+        'last_online_time1' => $option['last_online_time1'],
+    ]);
+    showsubmit('submit', Helpers::lang($option['lang']), '', '', '', false);
+    showformfooter();
+}
+showtablefooter();
+
 $perpage = Request::perPage();
 $page = Request::page();
 $count = Log::count();
+$last_online_time1 = Request::lastOnlineTime1();
 
 showtableheader(Helpers::lang('multi_login_log_top'));
 
@@ -34,7 +65,11 @@ function submit_search_user_form(submit_button_id) {
 }
 EOD;
 
-$rows = Log::fetchCountGroupByUserByPage($page, $perpage);
+if ($last_online_time1) {
+    $rows = Log::fetchCountGroupByUserByPageAfter($last_online_time1, $page, $perpage);
+} else {
+    $rows = Log::fetchCountGroupByUserByPage($page, $perpage);
+}
 $lang_admin_log_top_table_field_view_log = Helpers::lang('admin_log_top_table_field_view_log');
 $lang_admin_log_top_table_field_search_user = Helpers::lang('admin_log_top_table_field_search_user');
 foreach ($rows as $row) {
